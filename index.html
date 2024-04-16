@@ -80,16 +80,40 @@
   inverse problems, such as estimating model parameters.
 </p>
 
-
 <h2>Technical Structure</h2>
 
-<p>Include a section 3 that describes the technical structure of your method or
-  implementation. This should be brief, no more than one screenful of webpage text. You
-  may also include an architectural figure in addition to the text.. Include a pointer to the
-  code to your implementation.
-</p>
+    <h3>Overview</h3>
+    <p>The project employs Physics-Informed Neural Networks (PINNs) to solve the Susceptible-Infectious-Recovered (SIR) model, a set of ordinary differential equations used in epidemiology to predict the spread of infectious diseases. PINNs integrate the mathematical structure of the differential equations directly into the loss function of a neural network. This approach allows the network to leverage both the available data and the underlying physics of the problem, leading to more accurate predictions even with limited or noisy data.</p>
 
+    <h3>Neural Network Architecture</h3>
+    <p>The core of our implementation is a neural network designed to approximate the solutions of the SIR model. The network, implemented using PyTorch, consists of five fully connected layers:</p>
+    <ul>
+        <li>The first layer takes a single input, representing time <i>t</i>, and maps it to 100 neurons.</li>
+        <li>The subsequent three layers are hidden layers with 100, 50, and 20 neurons, respectively, each followed by a ReLU activation function to introduce non-linearity.</li>
+        <li>The final layer outputs three values corresponding to the susceptible (<i>S</i>), infected (<i>I</i>), and recovered (<i>R</i>) compartments of the SIR model.</li>
+    </ul>
+    <p>Additionally, the model includes parameters <i>β</i> and <i>γ</i>, representing the infection rate and recovery rate, respectively. These are treated as learnable parameters within the network, allowing the model to adjust these values based on the data.</p>
 
+    <h3>Physics-Informed Loss</h3>
+    <p>The key innovation of our approach is the incorporation of the SIR model's differential equations into the loss function. This is achieved through a custom physics-informed loss function that penalizes deviations from the expected dynamics as described by the equations:</p>
+    <ul>
+        <li>The loss function calculates the derivatives of <i>S</i>, <i>I</i>, and <i>R</i> with respect to time using automatic differentiation.</li>
+        <li>It then computes the discrepancies between these derivatives and the expressions given by the SIR model's differential equations.</li>
+        <li>Additional terms in the loss function enforce the conservation of the total population and encourage the learnable parameters <i>β</i> and <i>γ</i> to stay within reasonable bounds.</li>
+    </ul>
+    <p>This physics-informed loss is combined with a traditional mean squared error loss calculated from the training data, allowing the network to learn from both the data and the physics of the problem.</p>
+
+    <h3>Training and Evaluation</h3>
+    <p>The model is trained using the Adam optimizer, with a learning rate scheduler to reduce the learning rate when the validation loss plateaus. The training process involves:</p>
+    <ol>
+        <li>Minimizing the combined physics-informed and data-driven loss.</li>
+        <li>Regularly evaluating the model on a validation set to monitor its performance and adjust the learning rate as necessary.</li>
+        <li>Saving the model parameters that achieve the lowest validation loss, ensuring that the best-performing model is retained.</li>
+    </ol>
+    <p>After training, the model's predictions for the SIR curves are compared against the actual data to assess its accuracy and generalization capability.</p>
+
+    <a href="https://github.com/yashrbhora/exploring-PINNs-for-diffeq/blob/main/sir_basic_PINN.ipynb">Click here</a> to view the notebook on GitHub.</p>
+ 
 <h2>Results</h2>
 
 <p>First, we applied PINNs to a simple differential equation: Newton's Cooling Law. This equation is described by:
