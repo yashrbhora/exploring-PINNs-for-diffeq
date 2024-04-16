@@ -39,6 +39,7 @@
 <div class="row">
 <div class="col">
 
+
 <h2>Introduction</h2>
 
 <p>The Susceptible-Infectious-Recovered (SIR) model is an epidemiological model used to evaluate and predict the spread
@@ -47,15 +48,16 @@
 
 <p>The Susceptible Equation: $$\frac{dS}{dt} = \frac{-\beta S(t) I(t)}{{N}}$$</p>
 
-<p>The Infected Equation: $$\frac{dS}{dt} = \frac{\beta S(t) I(t)}{N} - \gamma I(t)$$</p>
+<p>The Infected Equation: $$\frac{dI}{dt} = \frac{\beta S(t) I(t)}{N} - \gamma I(t)$$</p>
 
-<p>The Recovered Equation: $$\frac{dS}{dt} = \gamma I(t)$$</p>
+<p>The Recovered Equation: $$\frac{dR}{dt} = \gamma I(t)$$</p>
 
 <p>This project aims to apply physics-informed neural networks (PINNs) to the SIR equations. By introducing mathematical
   constraints from the differential equations in the loss function, the neural network is able to better generalize to
   the behavior of the system. The accurate prediction of the SIR model can offer insights into the duration of an
   outbreak, the total number of infections, and the peak of an outbreak. This information is vital for healthcare
-  officials to determine the appropriate allocation of resources during a crisis, which can ultimately save lives.</p>
+  officials to determine the appropriate allocation of resources during a crisis, which can ultimately save lives.
+</p>
 
 
 <h2>Paper Review</h2>
@@ -69,6 +71,7 @@
   performance in these predictions is especially impressive when considering the relative simplicity in the
   implementation of PINNs.
 </p>
+
 <p>Though, as the authors recognize, PINNs are not a comprehensive replacement to classical methods. Rather, they offer
   alternative paths to solving partial differential equations with new features such as parameterization and transfer
   learning, which can outweigh analytical techniques in specific domains. In our case, we choose to apply PINNs to the
@@ -76,6 +79,7 @@
   the epidemiological data has considerable noise or is sparse. The flexibility of PINNs also allows it to be used in
   inverse problems, such as estimating model parameters.
 </p>
+
 
 <h2>Technical Structure</h2>
 
@@ -85,11 +89,27 @@
   code to your implementation.
 </p>
 
+
 <h2>Results</h2>
 
-<p>Include a section 4 that reports your experimental findings. This should include graphs or
-  images that visualize the results that you have obtained.
+<p>First, we trained a simple neural network to model the SIR equations. This network has no prior knowledge of the
+  dynamics of the system and is purely minimizing the mean square error loss from the training data. As shown below,
+  this network fails to generalize well to the future behavior of the SIR model.
 </p>
+
+<img src="naive_SIR.png" alt="naive SIR">
+
+<p>Next, we used the same neural network architecture, but incorportated the physics-informed loss in the optimization.
+  As shown below, the nerual network with the same architecture peforms much better in its predictions of the SIR model.
+  This demonstrates the value in providing the prior mathematical knowledge from the system of differential equations.
+</p>
+
+<img src="pinn_SIR.png" alt="pinn SIR">
+
+<p>For further analysis, we demonstrate the effect of training data size on the disparity in performance between the
+  naïve and physics-informed networks.
+</p>
+
 
 <h2>Conclusion</h2>
 
@@ -101,6 +121,7 @@
   models.
 </p>
 
+
 <h3>References</h3>
 
 <p><a name="raissi-2019">[1]</a> <a href="https://www.sciencedirect.com/science/article/pii/S0021999118307125"
@@ -108,7 +129,8 @@
   <em>Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving
     nonlinear partial differential equations.</em></a>
   Journal of Computational Physics, vol. 378, pp. 686-707, February 2019.
-  </p>
+</p>
+
 
 <h2>Team Members</h2>
                                                    
