@@ -92,14 +92,22 @@
 
 <h2>Results</h2>
 
-<p>First, we trained a simple neural network to model the SIR equations. This network has no prior knowledge of the
+<p>First, we applied PINNs to a simple differential equation: Newton's Cooling Law. This equation is described by:
+  $$\frac{dT}{dt} = R (T_{env} - T)$$ where R is the cooling rate, $T_{env}$ is the temparature of the environment, and T is the temperature of the object. </p>
+
+<div class="twofigures">
+  <img src="naive_newton.png" alt="naive newton">
+  <img src="pinn_newton.png" alt="pinn newton">
+</div>
+
+<p>Next, we trained a simple neural network to model the SIR equations. This network has no prior knowledge of the
   dynamics of the system and is purely minimizing the mean square error loss from the training data. As shown below,
   this network fails to generalize well to the future behavior of the SIR model.
 </p>
 
 <img src="naive_SIR.png" alt="naive SIR">
 
-<p>Next, we used the same neural network architecture, but incorportated the physics-informed loss in the optimization.
+<p>Then, we used the same neural network architecture, but incorportated the physics-informed loss in the optimization.
   As shown below, the nerual network with the same architecture peforms much better in its predictions of the SIR model.
   This demonstrates the value in providing the prior mathematical knowledge from the system of differential equations.
 </p>

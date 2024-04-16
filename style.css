@@ -67,3 +67,12 @@ h2 {
 nobr.widenobr {
   white-space: normal;
 }
+
+.twofigures {
+  display: flex;
+}
+
+.twofigures img {
+  width: 50%;
+  height: auto;
+}
