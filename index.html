@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>Your Project Name</title>
+<title>Exploring Physics-informed Neural Networks For Differential Equations</title>
 <meta property="og:title" content=Your Project Name" />
 <meta name="twitter:title" content="Your Project Name" />
 <meta name="description" content="Your project about your cool topic described right here." />
@@ -14,6 +14,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 <link href="style.css" rel="stylesheet">
 
@@ -22,8 +24,8 @@
 <div class="nd-pageheader">
  <div class="container">
  <h1 class="lead">
- <nobr class="widenobr">Your Project Name</nobr>
- <nobr class="widenobr">For CS 7150</nobr>
+ <nobr class="widenobr">Exploring Physics-informed Neural Networks For Differential Equations</nobr>
+ <nobr class="widenobr">For DS 4440</nobr>
  </h1>
  </div>
 </div><!-- end nd-pageheader -->
@@ -31,32 +33,116 @@
 <div class="container">
 <div class="row">
 <div class="col justify-content-center text-center">
-<h2>An Analysis of [papername]</h2>
-<p>Describe the paper and the big question about it that interests you.</p>
+<h2>An Analysis of Physics-informed Neural Networks for Differential Equations</h2>
 </div>
 </div>
 <div class="row">
 <div class="col">
 
-<h2>Literature Review; Biography; Social Impact; Industry Applications; Follow-on Research; and Peer-Review</h2>
 
-<p>Just as we have done in the role-playing exercise, analyze the paper from all perspectives.
+<h2>Introduction</h2>
+
+<p>The Susceptible-Infectious-Recovered (SIR) model is an epidemiological model used to evaluate and predict the spread
+  of infectious diseases within a population. The model consists of three ordinary differential equations:
 </p>
 
-<p>Optionally, in addition to a reading-based analysis, implement the ideas of the paper in code, and report on your findings.
+<p>The Susceptible Equation: $$\frac{dS}{dt} = \frac{-\beta S(t) I(t)}{{N}}$$</p>
+
+<p>The Infected Equation: $$\frac{dI}{dt} = \frac{\beta S(t) I(t)}{N} - \gamma I(t)$$</p>
+
+<p>The Recovered Equation: $$\frac{dR}{dt} = \gamma I(t)$$</p>
+
+<p>This project aims to apply physics-informed neural networks (PINNs) to the SIR equations. By introducing mathematical
+  constraints from the differential equations in the loss function, the neural network is able to better generalize to
+  the behavior of the system. The accurate prediction of the SIR model can offer insights into the duration of an
+  outbreak, the total number of infections, and the peak of an outbreak. This information is vital for healthcare
+  officials to determine the appropriate allocation of resources during a crisis, which can ultimately save lives.
 </p>
+
+
+<h2>Paper Review</h2>
+<p>Physics-informed Neural Networks by Raussi et al. presents a method of using neural networks to solve
+  differential equations by introducing the mathematical constraints as a regularization agent in the loss function.
+  This prior information serves to shrink the solution space of the network, enabling it to quickly learn a generalized
+  function that obeys the given laws. Generalization is of increased importance in the context of complex biological and
+  physical domains, which are often plagued by low amounts of training data. The authors demonstrate the method by
+  applying PINNs to notable problems such as Schrodingers equation and the Allen-Cahn equation. In these cases, PINNs
+  are able to generate accurate predictions of the non-linear behavior despite the small data sets. The level of
+  performance in these predictions is especially impressive when considering the relative simplicity in the
+  implementation of PINNs.
+</p>
+
+<p>Though, as the authors recognize, PINNs are not a comprehensive replacement to classical methods. Rather, they offer
+  alternative paths to solving partial differential equations with new features such as parameterization and transfer
+  learning, which can outweigh analytical techniques in specific domains. In our case, we choose to apply PINNs to the
+  SIR model to predict the dynamics of disease spread within a population. PINNs can offer better generalization if
+  the epidemiological data has considerable noise or is sparse. The flexibility of PINNs also allows it to be used in
+  inverse problems, such as estimating model parameters.
+</p>
+
+
+<h2>Technical Structure</h2>
+
+<p>Include a section 3 that describes the technical structure of your method or
+  implementation. This should be brief, no more than one screenful of webpage text. You
+  may also include an architectural figure in addition to the text.. Include a pointer to the
+  code to your implementation.
+</p>
+
+
+<h2>Results</h2>
+
+<p>First, we applied PINNs to a simple differential equation: Newton's Cooling Law. This equation is described by:
+  $$\frac{dT}{dt} = R (T_{env} - T)$$ where R is the cooling rate, $T_{env}$ is the temparature of the environment, and T is the temperature of the object. </p>
+
+<div class="twofigures">
+  <img src="naive_newton.png" alt="naive newton">
+  <img src="pinn_newton.png" alt="pinn newton">
+</div>
+
+<p>Next, we trained a simple neural network to model the SIR equations. This network has no prior knowledge of the
+  dynamics of the system and is purely minimizing the mean square error loss from the training data. As shown below,
+  this network fails to generalize well to the future behavior of the SIR model.
+</p>
+
+<img src="naive_SIR.png" alt="naive SIR">
+
+<p>Then, we used the same neural network architecture, but incorportated the physics-informed loss in the optimization.
+  As shown below, the nerual network with the same architecture peforms much better in its predictions of the SIR model.
+  This demonstrates the value in providing the prior mathematical knowledge from the system of differential equations.
+</p>
+
+<img src="pinn_SIR.png" alt="pinn SIR">
+
+<p>For further analysis, we demonstrate the effect of training data size on the disparity in performance between the
+  naïve and physics-informed networks.
+</p>
+
+
+<h2>Conclusion</h2>
+
+<p>As shown above, the application of PINNs to the SIR equations generates substantial improvements over basic neural
+  network architectures. By informing the loss function with prior information about the system, the model is able to
+  better generalize to the long-term behavior of the disease spread. The increased accuracy in modeling these equations
+  can provide policymakers with valuable knowledge about the future state of the population. In the future, this work
+  could be further progressed by applying PINNs to more complicated epidemiological equations such as the SEIR or SEIRS
+  models.
+</p>
+
 
 <h3>References</h3>
 
-<p><a name="bottou-1990">[1]</a> <a href="https://papers.baulab.info/Bottou-1990.pdf"
-  >L&eacute;on Bottou and Patrick Gallinari.
-  <em>A framework for the cooperation of learning algorithms.</em></a>
-  Advances in neural information processing systems 3 (1990).
+<p><a name="raissi-2019">[1]</a> <a href="https://www.sciencedirect.com/science/article/pii/S0021999118307125"
+  >M. Raissi, P. Perdikaris, and G.E. Karniadakis.
+  <em>Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving
+    nonlinear partial differential equations.</em></a>
+  Journal of Computational Physics, vol. 378, pp. 686-707, February 2019.
 </p>
+
 
 <h2>Team Members</h2>
                                                    
-<p>Make sure to list here is who is on the team.</p>
+<p>Yash Bhora and Henry Noyes</p>
 
   
 </div><!--col-->
@@ -66,7 +152,7 @@
 <footer class="nd-pagefooter">
   <div class="row">
     <div class="col-6 col-md text-center">
-      <a href="https://cs7150.baulab.info/">About CS 7150</a>
+      <a href="https://ds4440.baulab.info/">About DS 4440</a>
     </div>
   </div>
 </footer>
