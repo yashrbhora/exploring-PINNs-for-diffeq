@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>Exploring Physics-informed Neural Networks for Differential Equations</title>
+<title>Exploring Physics-informed Neural Networks For Differential Equations</title>
 <meta property="og:title" content=Your Project Name" />
 <meta name="twitter:title" content="Your Project Name" />
 <meta name="description" content="Your project about your cool topic described right here." />
@@ -14,6 +14,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 <link href="style.css" rel="stylesheet">
 
@@ -22,7 +24,7 @@
 <div class="nd-pageheader">
  <div class="container">
  <h1 class="lead">
- <nobr class="widenobr">Exploring Physics-informed Neural Networks for Differential Equations</nobr>
+ <nobr class="widenobr">Exploring Physics-informed Neural Networks For Differential Equations</nobr>
  <nobr class="widenobr">For DS 4440</nobr>
  </h1>
  </div>
@@ -32,7 +34,6 @@
 <div class="row">
 <div class="col justify-content-center text-center">
 <h2>An Analysis of Physics-informed Neural Networks for Differential Equations</h2>
-<p>Describe the paper and the big question about it that interests you.</p>
 </div>
 </div>
 <div class="row">
@@ -40,10 +41,22 @@
 
 <h2>Introduction</h2>
 
-<p>Include a section 1 “introduction” that describes the main question that you are asking in
-  your project. It should describe the problem that you are taking on that builds on the
-  paper.
+<p>The Susceptible-Infectious-Recovered (SIR) model is an epidemiological model used to evaluate and predict the spread
+  of infectious diseases within a population. The model consists of three ordinary differential equations:
 </p>
+
+<p>The Susceptible Equation: $$\frac{dS}{dt} = \frac{-\beta S(t) I(t)}{{N}}$$</p>
+
+<p>The Infected Equation: $$\frac{dS}{dt} = \frac{\beta S(t) I(t)}{N} - \gamma I(t)$$</p>
+
+<p>The Recovered Equation: $$\frac{dS}{dt} = \gamma I(t)$$</p>
+
+<p>This project aims to apply physics-informed neural networks (PINNs) to the SIR equations. By introducing mathematical
+  constraints from the differential equations in the loss function, the neural network is able to better generalize to
+  the behavior of the system. The accurate prediction of the SIR model can offer insights into the duration of an
+  outbreak, the total number of infections, and the peak of an outbreak. This information is vital for healthcare
+  officials to determine the appropriate allocation of resources during a crisis, which can ultimately save lives.</p>
+
 
 <h2>Paper Review</h2>
 <p>Physics-informed Neural Networks by Raussi et al. presents a method of using neural networks to solve
@@ -58,7 +71,10 @@
 </p>
 <p>Though, as the authors recognize, PINNs are not a comprehensive replacement to classical methods. Rather, they offer
   alternative paths to solving partial differential equations with new features such as parameterization and transfer
-  learning, which can outweigh analytical techniques in specific domains. In our case...
+  learning, which can outweigh analytical techniques in specific domains. In our case, we choose to apply PINNs to the
+  SIR model to predict the dynamics of disease spread within a population. PINNs can offer better generalization if
+  the epidemiological data has considerable noise or is sparse. The flexibility of PINNs also allows it to be used in
+  inverse problems, such as estimating model parameters.
 </p>
 
 <h2>Technical Structure</h2>
@@ -77,8 +93,12 @@
 
 <h2>Conclusion</h2>
 
-<p>Include a section 5 that has one paragraph to summarize your conclusions, including
-  any implications for applications or impacts on society, or ideas for future work.
+<p>As shown above, the application of PINNs to the SIR equations generates substantial improvements over basic neural
+  network architectures. By informing the loss function with prior information about the system, the model is able to
+  better generalize to the long-term behavior of the disease spread. The increased accuracy in modeling these equations
+  can provide policymakers with valuable knowledge about the future state of the population. In the future, this work
+  could be further progressed by applying PINNs to more complicated epidemiological equations such as the SEIR or SEIRS
+  models.
 </p>
 
 <h3>References</h3>
