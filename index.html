@@ -52,11 +52,14 @@
 
 <p>The Recovered Equation: $$\frac{dR}{dt} = \gamma I(t)$$</p>
 
-<p>This project aims to apply physics-informed neural networks (PINNs) to the SIR equations. By introducing mathematical
-  constraints from the differential equations in the loss function, the neural network is able to better generalize to
-  the behavior of the system. The accurate prediction of the SIR model can offer insights into the duration of an
-  outbreak, the total number of infections, and the peak of an outbreak. This information is vital for healthcare
-  officials to determine the appropriate allocation of resources during a crisis, which can ultimately save lives.
+<p>This project aims to apply physics-informed neural networks (PINNs) to the problem of disease spread. PINNs function
+  by introducing prior mathematical constraints as an additional term in the loss equation, restricting the solution
+  space of the network. This helps guide the network to better approximate the behavior of a dynamic system. In the case
+  of disease spread, informing a network with the SIR equations could greatly improve the accuracy of its predictions,
+  especially in the early days of an outbreak when the training data is limited. The accurate prediction of the disease
+  spread can offer insights into the duration of an outbreak, the total number of infections, and the peak of an
+  outbreak. This information is vital for healthcare officials to determine the appropriate allocation of resources
+  during a crisis, which can ultimately save lives.
 </p>
 
 
@@ -82,71 +85,89 @@
 
 <h2>Technical Structure</h2>
 
-    <h3>Overview</h3>
-    <p>The project employs Physics-Informed Neural Networks (PINNs) to solve the Susceptible-Infectious-Recovered (SIR) model, a set of ordinary differential equations used in epidemiology to predict the spread of infectious diseases. PINNs integrate the mathematical structure of the differential equations directly into the loss function of a neural network. This approach allows the network to leverage both the available data and the underlying physics of the problem, leading to more accurate predictions even with limited or noisy data.</p>
+<h3>Neural Network Architecture</h3>
+<p>The core of our implementation is a neural network designed to approximate the solutions of the SIR model. The
+  network, implemented using PyTorch, consists of five fully connected layers:</p>
+<ul>
+  <li>The first layer takes a single input, representing time <i>t</i>, and maps it to 100 neurons.</li>
+  <li>The subsequent three layers are hidden layers with 100, 50, and 20 neurons, respectively, each followed by a ReLU
+    activation function to introduce non-linearity.</li>
+  <li>The final layer outputs three values corresponding to the susceptible (<i>S</i>), infected (<i>I</i>), and
+    recovered (<i>R</i>) compartments of the SIR model.</li>
+</ul>
+<p>Additionally, the model includes parameters <i>β</i> and <i>γ</i>, representing the infection rate and recovery rate,
+  respectively. These are treated as learnable parameters within the network, allowing the model to adjust these values
+  based on the data.</p>
 
-    <h3>Neural Network Architecture</h3>
-    <p>The core of our implementation is a neural network designed to approximate the solutions of the SIR model. The network, implemented using PyTorch, consists of five fully connected layers:</p>
-    <ul>
-        <li>The first layer takes a single input, representing time <i>t</i>, and maps it to 100 neurons.</li>
-        <li>The subsequent three layers are hidden layers with 100, 50, and 20 neurons, respectively, each followed by a ReLU activation function to introduce non-linearity.</li>
-        <li>The final layer outputs three values corresponding to the susceptible (<i>S</i>), infected (<i>I</i>), and recovered (<i>R</i>) compartments of the SIR model.</li>
-    </ul>
-    <p>Additionally, the model includes parameters <i>β</i> and <i>γ</i>, representing the infection rate and recovery rate, respectively. These are treated as learnable parameters within the network, allowing the model to adjust these values based on the data.</p>
+<h3>Physics-Informed Loss</h3>
+<p>The key innovation of our approach is the incorporation of the SIR model's differential equations into the loss
+  function. This is achieved through a custom physics-informed loss function that penalizes deviations from the expected
+  dynamics as described by the equations:</p>
+<ul>
+  <li>The loss function calculates the derivatives of <i>S</i>, <i>I</i>, and <i>R</i> with respect to time using
+    automatic differentiation.</li>
+  <li>It then computes the discrepancies between these derivatives and the expressions given by the SIR model's
+    differential equations.</li>
+  <li>Additional terms in the loss function enforce the conservation of the total population and encourage the learnable
+    parameters <i>β</i> and <i>γ</i> to stay within reasonable bounds.</li>
+</ul>
+<p>This physics-informed loss is combined with a traditional mean squared error loss calculated from the training data,
+  allowing the network to learn from both the data and the physics of the problem.</p>
 
-    <h3>Physics-Informed Loss</h3>
-    <p>The key innovation of our approach is the incorporation of the SIR model's differential equations into the loss function. This is achieved through a custom physics-informed loss function that penalizes deviations from the expected dynamics as described by the equations:</p>
-    <ul>
-        <li>The loss function calculates the derivatives of <i>S</i>, <i>I</i>, and <i>R</i> with respect to time using automatic differentiation.</li>
-        <li>It then computes the discrepancies between these derivatives and the expressions given by the SIR model's differential equations.</li>
-        <li>Additional terms in the loss function enforce the conservation of the total population and encourage the learnable parameters <i>β</i> and <i>γ</i> to stay within reasonable bounds.</li>
-    </ul>
-    <p>This physics-informed loss is combined with a traditional mean squared error loss calculated from the training data, allowing the network to learn from both the data and the physics of the problem.</p>
+<h3>Training and Evaluation</h3>
+<p>The model is trained using the Adam optimizer, with a learning rate scheduler to reduce the learning rate when the
+  validation loss plateaus. The training process involves:</p>
+<ol>
+  <li>Minimizing the combined physics-informed and data-driven loss.</li>
+  <li>Regularly evaluating the model on a validation set to monitor its performance and adjust the learning rate as
+    necessary.</li>
+  <li>Saving the model parameters that achieve the lowest validation loss, ensuring that the best-performing model is
+    retained.</li>
+</ol>
+<p>After training, the model's predictions for the SIR curves are compared against the actual data to assess its
+  accuracy and generalization capability.</p>
 
-    <h3>Training and Evaluation</h3>
-    <p>The model is trained using the Adam optimizer, with a learning rate scheduler to reduce the learning rate when the validation loss plateaus. The training process involves:</p>
-    <ol>
-        <li>Minimizing the combined physics-informed and data-driven loss.</li>
-        <li>Regularly evaluating the model on a validation set to monitor its performance and adjust the learning rate as necessary.</li>
-        <li>Saving the model parameters that achieve the lowest validation loss, ensuring that the best-performing model is retained.</li>
-    </ol>
-    <p>After training, the model's predictions for the SIR curves are compared against the actual data to assess its accuracy and generalization capability.</p>
-
-    <a href="https://github.com/yashrbhora/exploring-PINNs-for-diffeq/blob/main/sir_basic_PINN.ipynb">Click here</a> to view the notebook on GitHub.</p>
+<a href="https://github.com/yashrbhora/exploring-PINNs-for-diffeq/blob/main/sir_basic_PINN.ipynb">Click here</a> to view
+the notebook on GitHub.</p>
  
 <h2>Results</h2>
 
-<p>First, we applied PINNs to a simple differential equation: Newton's Cooling Law. This equation is described by:
-  $$\frac{dT}{dt} = R (T_{env} - T)$$ where R is the cooling rate, T_env is the temparature of the environment, and T is the temperature of the object. </p>
+<p>First, to verify our architecture, we applied PINNs to a simple differential equation: Newton's Cooling Law. This
+  equation is described by: $$\frac{dT}{dt} = R (T_{env} - T)$$ where <i>R</i> is the cooling rate, <i>T_env</i> is the temparature of
+  the environment, and <i>T</i> is the temperature of the object. As seen in the plots below, the addition of the physics loss
+  term dramatically improves the predictive accuracy of the neural network in the time domain past training data. </p>
 
 <div class="twofigures">
-  <img src="naive_newton.png" alt="naive newton">
-  <img src="pinn_newton.png" alt="pinn newton">
+  <img src="imgs/naive_newton.png" alt="naive newton">
+  <img src="imgs/pinn_newton.png" alt="pinn newton">
 </div>
 
 <p>Next, we trained a simple neural network to model the SIR equations. This network has no prior knowledge of the
   dynamics of the system and is purely minimizing the mean square error loss from the training data. As shown below,
-  this network fails to generalize well to the future behavior of the SIR model.
+  this network fails to generalize well to the future behavior of the SIR model, generating a solution which describes a
+  negative susceptible population.
 </p>
 
-<img src="naive_SIR.png" alt="naive SIR">
+<img src="imgs/naive_SIR.png" alt="naive SIR">
 
 <p>Then, we used the same neural network architecture, but incorportated the physics-informed loss in the optimization.
   As shown below, the nerual network with the same architecture peforms much better in its predictions of the SIR model.
   This demonstrates the value in providing the prior mathematical knowledge from the system of differential equations.
+  In the event of strong noise or low amounts of training data, the addition of a physics-informed loss term can lead a
+  neural network to estimate much more practical solutions that fit the constraints of the problem domain.
 </p>
 
-<img src="pinn_SIR.png" alt="pinn SIR">
+<img src="imgs/pinn_SIR.png" alt="pinn SIR">
 
 
 <h2>Conclusion</h2>
 
-<p>As shown above, the application of PINNs to the SIR equations generates substantial improvements over basic neural
-  network architectures. By informing the loss function with prior information about the system, the model is able to
-  better generalize to the long-term behavior of the disease spread. The increased accuracy in modeling these equations
-  can provide policymakers with valuable knowledge about the future state of the population. In the future, this work
-  could be further progressed by applying PINNs to more complicated epidemiological equations such as the SEIR or SEIRS
-  models.
+<p>As shown above, the application of PINNs to disease spread using the SIR equations generates substantial
+  improvements over basic neural network architectures. By informing the loss function with prior information about the
+  system, the model is able to better generalize to the long-term behavior of the disease spread. The increased accuracy
+  in modeling these equations can provide policymakers with valuable knowledge about the future state of the population.
+  In the future, this work could be further progressed by applying PINNs to more complicated epidemiological equations
+  such as the SEIR or SEIRS models.
 </p>
 
 
