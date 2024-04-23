@@ -36,13 +36,19 @@ Additionally, the model includes parameters *β* and *γ*, representing the infe
 
 ### Physics-Informed Loss
 
+$$L = L_{data} + L_{physics}$$
+
 The key innovation of our approach is the incorporation of the SIR model's differential equations into the loss function. This is achieved through a custom physics-informed loss function that penalizes deviations from the expected dynamics as described by the equations:
 
-- The loss function calculates the derivatives of *S*, *I*, and *R* with respect to time using automatic differentiation.
+- The loss function calculates the derivatives of *S*, *I*, and *R* with respect to time using automatic differentiation and samples from the domain of the dynamics (called *colocation points*).
 - It then computes the discrepancies between these derivatives and the expressions given by the SIR model's differential equations.
 - Additional terms in the loss function enforce the conservation of the total population and encourage the learnable parameters *β* and *γ* to stay within reasonable bounds.
 
+$$L_{physics} = \frac{1}{N}\sum_{i=1}^{N}||\frac{dS}{dt} + \beta S I||^2 + ||\frac{dI}{dt} - \beta S I + \gamma I||^2 + ||\frac{dR}{dt} - \gamma I||^2$$
+
 This physics-informed loss is combined with a traditional mean squared error loss calculated from the training data, allowing the network to learn from both the data and the physics of the problem.
+
+$$L_{data} = \frac{1}{M}\sum_{i=1}^{M}||y_i - f(x_i)||^2$$
 
 ### Training and Evaluation
 

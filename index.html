@@ -100,19 +100,27 @@
   based on the data.</p>
 
 <h3>Physics-Informed Loss</h3>
+
+<p>$$L = L_{data} + L_{physics}$$</p>
+
 <p>The key innovation of our approach is the incorporation of the SIR model's differential equations into the loss
   function. This is achieved through a custom physics-informed loss function that penalizes deviations from the expected
   dynamics as described by the equations:</p>
 <ul>
   <li>The loss function calculates the derivatives of <i>S</i>, <i>I</i>, and <i>R</i> with respect to time using
-    automatic differentiation.</li>
+    automatic differentiation and samples from the domain of the dynamics (called *colocation points*).</li>
   <li>It then computes the discrepancies between these derivatives and the expressions given by the SIR model's
     differential equations.</li>
   <li>Additional terms in the loss function enforce the conservation of the total population and encourage the learnable
     parameters <i>β</i> and <i>γ</i> to stay within reasonable bounds.</li>
 </ul>
+
+<p>$$L_{physics} = \frac{1}{N}\sum_{i=1}^{N}||\frac{dS}{dt} + \beta S I||^2 + ||\frac{dI}{dt} - \beta S I + \gamma I||^2 + ||\frac{dR}{dt} - \gamma I||^2$$</p>
+
 <p>This physics-informed loss is combined with a traditional mean squared error loss calculated from the training data,
   allowing the network to learn from both the data and the physics of the problem.</p>
+
+<p>$$L_{data} = \frac{1}{M}\sum_{i=1}^{M}||y_i - f(x_i)||^2$$</p>  
 
 <h3>Training and Evaluation</h3>
 <p>The model is trained using the Adam optimizer, with a learning rate scheduler to reduce the learning rate when the
