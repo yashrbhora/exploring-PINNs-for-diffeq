@@ -60,17 +60,19 @@ The model is trained using the Adam optimizer, with a learning rate scheduler to
 
 After training, the model's predictions for the SIR curves are compared against the actual data to assess its accuracy and generalization capability.
 
-[Click here](https://github.com/yashrbhora/exploring-PINNs-for-diffeq/blob/main/sir_basic_PINN.ipynb) to view the notebook on GitHub.
-
 ## Results
 
 First, to verify our architecture, we applied PINNs to a simple differential equation: Newton's Cooling Law. This equation is described by: $$\frac{dT}{dt} = R (T_{env} - T)$$ where $R$ is the cooling rate, $T_{env}$ is the temparature of the environment, and $T$ is the temperature of the object. As seen in the plots below, the addition of the physics loss term dramatically improves the predictive accuracy of the neural network in the time domain past training data.
+
+[Click here](https://github.com/yashrbhora/exploring-PINNs-for-diffeq/blob/main/newton_PINN.ipynb) to view the Newton Cooling notebook on GitHub.
 
 <div align="center">
   <img src="imgs/naive_newton.png" alt="naive newton" width="45%"> <img src="imgs/pinn_newton.png" alt="pinn newton" width="45%">
 </div>
 
 Next, we trained a simple neural network to model the SIR equations. This network has no prior knowledge of the dynamics of the system and is purely minimizing the mean square error loss from the training data. As shown below, this network fails to generalize well to the future behavior of the SIR model, generating a solution which describes a negative susceptible population.
+
+[Click here](https://github.com/yashrbhora/exploring-PINNs-for-diffeq/blob/main/sir_PINN.ipynb) to view the SIR notebook on GitHub.
 
 <div align="center">
 <img src="imgs/naive_SIR.png" alt="naive SIR">
@@ -84,7 +86,7 @@ Then, we used the same neural network architecture, but incorportated the physic
 
 ## Conclusion
 
-As shown above, the application of PINNs to disease spread using the SIR equations generates substantial improvements over basic neural network architectures. By informing the loss function with prior information about the system, the model is able to better generalize to the long-term behavior of the disease spread. The increased accuracy in modeling these equations can provide policymakers with valuable knowledge about the future state of the population. In the future, this work could be further progressed by applying PINNs to more complicated epidemiological equations such as the SEIR or SEIRS models.
+As shown above, the application of PINNs to disease spread using the SIR equations generates substantial improvements over basic neural network architectures. By informing the loss function with prior information about the system, the model is able to better generalize to the long-term behavior of the disease spread. The increased accuracy in modeling these equations can provide policymakers with valuable knowledge about the future state of the population. In the future, this work could be further progressed by applying PINNs to more complicated epidemiological equations such as the SEIR or SEIRS models. In addition, we might want to explore transfer-learning techniques with PINNs to related dynamical systems.
 
 ## References
 
