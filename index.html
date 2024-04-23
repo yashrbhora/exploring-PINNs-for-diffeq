@@ -95,7 +95,7 @@
   <li>The final layer outputs three values corresponding to the susceptible (<i>S</i>), infected (<i>I</i>), and
     recovered (<i>R</i>) compartments of the SIR model.</li>
 </ul>
-<p>Additionally, the model includes parameters <i>β</i> and <i>γ</i>, representing the infection rate and recovery rate,
+<p>Additionally, the model includes parameters <i>&Beta;</i> and <i>&gamma;</i>, representing the infection rate and recovery rate,
   respectively. These are treated as learnable parameters within the network, allowing the model to adjust these values
   based on the data.</p>
 
@@ -108,11 +108,11 @@
   dynamics as described by the equations:</p>
 <ul>
   <li>The loss function calculates the derivatives of <i>S</i>, <i>I</i>, and <i>R</i> with respect to time using
-    automatic differentiation and samples from the domain of the dynamics (called *colocation points*).</li>
+    automatic differentiation and samples from the domain of the dynamics (called <i>colocation points</i>).</li>
   <li>It then computes the discrepancies between these derivatives and the expressions given by the SIR model's
     differential equations.</li>
   <li>Additional terms in the loss function enforce the conservation of the total population and encourage the learnable
-    parameters <i>β</i> and <i>γ</i> to stay within reasonable bounds.</li>
+    parameters <i>&Beta;</i> and <i>&gamma;</i> to stay within reasonable bounds.</li>
 </ul>
 
 <p>$$L_{physics} = \frac{1}{N}\sum_{i=1}^{N}||\frac{dS}{dt} + \beta S I||^2 + ||\frac{dI}{dt} - \beta S I + \gamma I||^2 + ||\frac{dR}{dt} - \gamma I||^2$$</p>
@@ -138,7 +138,7 @@
 <h2>Results</h2>
 
 <p>First, to verify our architecture, we applied PINNs to a simple differential equation: Newton's Cooling Law. This
-  equation is described by: $$\frac{dT}{dt} = R (T_{env} - T)$$ where <i>R</i> is the cooling rate, <i>T_env</i> is the temparature of
+  equation is described by: $$\frac{dT}{dt} = R (T_{env} - T)$$ where <i>R</i> is the cooling rate, <i>T<sub>env</sub></i> is the temparature of
   the environment, and <i>T</i> is the temperature of the object. As seen in the plots below, the addition of the physics loss
   term dramatically improves the predictive accuracy of the neural network in the time domain past training data. </p>
 
