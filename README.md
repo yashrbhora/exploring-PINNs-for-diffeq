@@ -91,3 +91,5 @@ As shown above, the application of PINNs to disease spread using the SIR equatio
 ## References
 
 [1] [M. Raissi, P. Perdikaris, and G.E. Karniadakis. *Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations.*](https://www.sciencedirect.com/science/article/pii/S0021999118307125) Journal of Computational Physics, vol. 378, pp. 686-707, February 2019.
+
+[2] [W. O. Kermack and A. G. McKendrick. *A contribution to the mathematical theory of epidemics.*](https://doi.org/10.1098/rspa.1927.0118) Proceedings of the Royal Society of London. Series A, Containing Papers of a Mathematical and Physical Character, vol. 115, no. 772, pp. 700-721, August 1927.
